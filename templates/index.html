@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="file-manager-container">
+    <div class="header d-flex justify-content-between">
+        <h2 class="name-header">File Manager</h2>
+        <div class="upload-menu">
+            <!-- Styled File Input -->
+            <label for="file-input" class="file-label">
+                Choose File
+            </label>
+            <input type="file" name="file" id="file-input" class="file-input" />
+            <input type="hidden" name="path" id="current-path" value="" />
+
+            <!-- File Name Display -->
+            <span id="file-name" class="file-name"></span>
+
+            <!-- Styled Upload Button -->
+            <button type="submit" id="upload-button" class="upload-button">
+                <svg class="svg-arr-up" width="20" height="20">
+                    <use xlink:href="#arrow-up"></use>
+                </svg>
+            </button>
+
+            <div class="folder-creation-container">
+                <button id="create-folder-button" class="upload-button" type="button">
+                    <svg class="svg-folder" width="20" height="20">
+                        <use xlink:href="#folder"></use>
+                    </svg>
+                </button>
+
+                <div id="folder-overlay" class="folder-overlay">
+                    <input type="text" id="folder-name-input" placeholder="Folder name" />
+                    <div class="overlay-buttons">
+                        <button id="cancel-folder" class="overlay-btn">Cancel</button>
+                        <button id="confirm-folder" class="overlay-btn confirm">Create</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Place this <svg> definition somewhere in your HTML (ideally in a hidden section or in a separate sprite file) -->
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="arrow-up" viewBox="0 0 256 256">
+                    <path d="M231.39062,123.06152A8,8,0,0,1,224,128H184v56a8.00039,8.00039,0,0,1-8,8H80a8.00039,8.00039,0,0,1-8-8V128H32a8.00065,8.00065,0,0,1-5.65723-13.65723l96-96a8.003,8.003,0,0,1,11.31446,0l96,96A8.002,8.002,0,0,1,231.39062,123.06152ZM176,208H80a8,8,0,0,0,0,16h96a8,8,0,0,0,0-16Z"/>
+                </symbol>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="arrow-down" viewBox="0 0 256 256">
+                    <path d="M72,40a8.00039,8.00039,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8.00039,8.00039,0,0,1,72,40Zm159.39062,92.93848A8,8,0,0,0,224,128H184V72a8.00039,8.00039,0,0,0-8-8H80a8.00039,8.00039,0,0,0-8,8v56H32a8.00065,8.00065,0,0,0-5.65723,13.65723l96,96a8.003,8.003,0,0,0,11.31446,0l96-96A8.002,8.002,0,0,0,231.39062,132.93848Z"/>
+                </symbol>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="cross" viewBox="-3.5 0 19 19">
+                    <path d="M11.383 13.644A1.03 1.03 0 0 1 9.928 15.1L6 11.172 2.072 15.1a1.03 1.03 0 1 1-1.455-1.456l3.928-3.928L.617 5.79a1.03 1.03 0 1 1 1.455-1.456L6 8.261l3.928-3.928a1.03 1.03 0 0 1 1.455 1.456L7.455 9.716z"/>
+                </symbol>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="folder" viewBox="0 0 24 24">
+                    <path d="M9 13H15M12 10V16M12.0627 6.06274L11.9373 5.93726C11.5914 5.59135 11.4184 5.4184 11.2166 5.29472C11.0376 5.18506 10.8425 5.10425 10.6385 5.05526C10.4083 5 10.1637 5 9.67452 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V15.8C3 16.9201 3 17.4802 3.21799 17.908C3.40973 18.2843 3.71569 18.5903 4.09202 18.782C4.51984 19 5.07989 19 6.2 19H17.8C18.9201 19 19.4802 19 19.908 18.782C20.2843 18.5903 20.5903 18.2843 20.782 17.908C21 17.4802 21 16.9201 21 15.8V10.2C21 9.0799 21 8.51984 20.782 8.09202C20.5903 7.71569 20.2843 7.40973 19.908 7.21799C19.4802 7 18.9201 7 17.8 7H14.3255C13.8363 7 13.5917 7 13.3615 6.94474C13.1575 6.89575 12.9624 6.81494 12.7834 6.70528C12.5816 6.5816 12.4086 6.40865 12.0627 6.06274Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </symbol>
+            </svg>
+        </div>
+    </div>
+
+    <div class="breadcrumb-container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"></li>
+                <!-- Additional breadcrumb items will be dynamically added here -->
+            </ol>
+        </nav>
+    </div>
+
+    <div id="file-container" class="bg-light p-3 rounded file-manager"></div>
+</div>
+
+
+<div id="file-viewer-container" class="file-viewer-container bg-light p-3 rounded mt-3" style="display: none;">
+    <div class="file-viewer-header d-flex justify-content-between mb-2">
+        <h3 id="viewer-filename" class="viewer-filename"></h3>
+        <button id="close-viewer" class="btn btn-sm btn-danger">
+            <svg class="svg-cross" width="20" height="20">
+                <use xlink:href="#cross"></use>
+            </svg>
+        </button>
+    </div>
+    <div class="file-content-container">
+        <div class="line-numbers"></div>
+        <div class="loading-indicator">
+            Loading content...
+        </div>
+        <pre id="file-content" class="file-content text-white" data-type="text"></pre>
+    </div>
+</div>
+
+
+
+<div class="info-panel">
+    <h3 class="panel-title">System Monitor</h3>
+    
+    <!-- Storage Chart -->
+    <div class="chart-container">
+        <canvas id="storageChart"></canvas>
+        <canvas id="fileTypesChart"></canvas>
+    </div>
+        
+    <!-- System Stats -->
+    <div class="system-stats">
+        <div class="stat-item">
+            <span class="stat-label">RAM Usage:</span>
+            <span class="stat-value" id="ram-usage">-</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">CPU Load:</span>
+            <span class="stat-value" id="cpu-usage">-</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Temperature:</span>
+            <span class="stat-value" id="temperature">-</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

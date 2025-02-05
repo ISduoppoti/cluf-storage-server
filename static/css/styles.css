@@ -1,0 +1,429 @@
+body {
+    background-color: #1c1c1c;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.info-panel,
+.file-viewer-container,
+.file-manager-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 2px solid #444;
+    background-color: #272829;
+    border-radius: 10px;
+}
+
+.file-viewer-header,
+.header {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #444;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.viewer-filename,
+.name-header {
+    color: #D9CDAE;
+}
+
+.file-item {
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #242525;
+    color: #E5DDC8;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-item a, .file-item .download-btn {
+    text-decoration: none;
+    color: #4caf50;
+}
+
+.file-item:hover {
+    background-color: #333;
+    color: #ccc;
+}
+
+.folder-content {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.file,
+.folder {
+    flex: 1;
+    cursor: pointer;
+}
+
+.download-btn {
+    margin-left: 10px;
+}
+
+
+.breadcrumb-container {
+    margin-bottom: 20px;
+}
+
+.breadcrumb {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background-color: transparent;
+}
+
+.breadcrumb-item {
+    display: inline;
+    font-size: 16px;
+}
+
+.breadcrumb-item,
+.breadcrumb-item span {
+    color: #6c757d; /* Slightly muted color for breadcrumb items */
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    padding: 0 10px;
+}
+
+.breadcrumb-item:last-child,
+.breadcrumb-item:last-child span {
+    color: #D9CDAE; /* Change this color to whatever you prefer */
+    font-weight: bold; /* Optional, if you want to make the last item bold */
+}
+
+
+.upload-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* File input styling */
+.file-input {
+    opacity: 0;
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+}
+
+.file-label {
+    background-color: #D9CDAE;
+    color: #272829;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s ease;
+}
+
+.file-label:hover {
+    transform: scale(1.1);
+}
+
+/* File name display */
+.file-name {
+    font-size: 14px;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100px;
+    min-width: 100px;
+    opacity: 0; /* Default state: hidden */
+    margin-right: -80px;
+    transition: opacity 0.5s ease-in, margin-right 0.3s ease-in;
+}
+
+/* Upload button styling */
+.upload-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #D9CDAE;
+    border: none;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upload-button:hover {
+    transform: scale(1.1);
+}
+
+.upload-button svg {
+    fill: #272829;
+}
+
+
+.file-name.active {
+    opacity: 1; /* Make it visible */
+    color: #D9CDAE;
+    margin-left: 10px; /* Add spacing from the button */
+    margin-right: 10px;
+}
+
+
+.btn-download {
+    width: 25px;
+    height: 25px;
+    border-radius: 4px;
+    background-color: #D9CDAE;
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Centers vertically */
+    justify-content: center; /* Centers horizontally */
+    transition: transform 0.2s ease;
+}
+
+.btn-download:hover {
+    transform: scale(1.1);
+}
+
+.btn-download svg {
+    fill: #272829;
+}
+
+
+.file-content-container {
+    position: relative;
+    font-family: monospace;
+}
+
+.line-numbers {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    padding-right: 15px;
+    color: #6c757d;
+    text-align: right;
+    user-select: none;
+    border-right: 1px solid #444;
+    background-color: #272829;
+    z-index: 1;
+}
+
+
+.file-content {
+    position: relative;
+    margin-left: 60px; /* Space for line numbers */
+    min-height: 100px;
+}
+
+
+.file-content div, .line-numbers div {
+    line-height: 1.5;
+}
+
+#close-viewer {
+    width: 40px;
+    height: 40px;
+    padding: 0 8px;
+    background-color: #D9CDAE;
+    border: none;
+    border-radius: 8px;
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Centers vertically */
+    justify-content: center; /* Centers horizontally */
+    transition: transform 0.2s ease;
+}
+
+#close-viewer:hover {
+    transform: scale(1.1);
+}
+
+#close-viewer svg {
+    fill: #272829;
+}
+
+
+
+
+/* Image Preview Styles */
+.preview-image {
+    max-width: 100%;
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+
+/* When showing image - override text styles */
+.file-content[data-type="image"] {
+    margin-left: 0;
+    display: flex;
+    padding: 0;
+    min-height: auto;
+}
+
+.file-content[data-type="text"] {
+    padding: 0;
+}
+
+/* Loading State */
+.loading-indicator {
+    display: none;
+    color: #D9CDAE;
+    padding: 20px;
+    text-align: center;
+}
+
+.loading .loading-indicator {
+    display: block;
+}
+
+.loading .file-content {
+    display: none;
+}
+
+
+/* info panel css */
+.file-manager-content {
+    flex: 1;
+}
+
+.panel-title {
+    color: #D9CDAE;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px; /* Space between charts */
+    width: 100%;
+    margin: 15px 0;
+}
+
+.chart-container canvas {
+    max-width: 50%; /* Make sure each chart takes up half the space */
+    height: 200px;
+}
+
+.system-stats {
+    margin-top: 20px;
+    padding: 15px;
+    background: #242525;
+    border-radius: 8px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    color: #E5DDC8;
+}
+
+.stat-label {
+    font-weight: bold;
+}
+
+.stat-value {
+    color: #4caf50;
+}
+
+
+
+/* Folder creation overlay styles */
+.folder-creation-container {
+    position: relative;
+    display: inline-block;
+}
+
+#create-folder-button {
+    margin-left: 10px;
+}
+
+#create-folder-button svg {
+    fill: #D9CDAE;
+}
+
+
+.folder-overlay {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: #272829;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 1000;
+    min-width: 250px;
+}
+
+.folder-overlay::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 15px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent #272829 transparent;
+}
+
+#folder-name-input {
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    background: #242525;
+    border: 1px solid #444;
+    color: #E5DDC8;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#folder-name-input:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: #888; /* Set your preferred border color */
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2); /* Optional: Add a subtle glow */
+}
+
+.overlay-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.overlay-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #444;
+    color: #E5DDC8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.overlay-btn.confirm {
+    background-color: #D9CDAE;
+    color: #272829;
+}
+
+.overlay-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.overlay-btn:active {
+    transform: translateY(0);
+}
