@@ -3,6 +3,7 @@ import os
 import psutil
 from flask import (
     Flask,
+    after_this_request,
     jsonify,
     redirect,
     render_template,
@@ -18,7 +19,8 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = "supersecretkey"  # Replace with a secure key in production
 
 # Storage configuration
-STORAGE_FOLDER = "/storage"
+STORAGE_FOLDER = "storage"
+EXCHANGE_FOLDER = "exchange"
 USERNAME = "admin"  # changed of course... and better to use sha256
 PASSWORD = (
     "password"  # this project now is not for production, for personal self hosting
@@ -58,14 +60,19 @@ def logout():
 def files():
     """Fetch files and folders from the specified directory."""
     path = request.args.get("path", "")
-    full_path = os.path.join(STORAGE_FOLDER, path)
+    if path == "exchange":
+        target_folder = EXCHANGE_FOLDER
+    else:
+        full_path = os.path.join(STORAGE_FOLDER, path)
 
-    if not os.path.exists(full_path):
-        return jsonify({"error": "Path does not exist", "files": []})
+        if not os.path.exists(full_path):
+            return jsonify({"error": "Path does not exist", "files": []})
+
+        target_folder = full_path
 
     files = []
-    for entry in sorted(os.listdir(full_path)):
-        entry_path = os.path.join(full_path, entry)
+    for entry in sorted(os.listdir(target_folder)):
+        entry_path = os.path.join(target_folder, entry)
         files.append(
             {
                 "name": entry,
@@ -86,8 +93,11 @@ def upload_file():
     if file.filename == "":
         return redirect(url_for("index"))
     path = request.form.get("path", "")
+    target_folder = STORAGE_FOLDER
+    if request.form.get("folder", "") == "exchange":
+        target_folder = EXCHANGE_FOLDER
     filename = secure_filename(file.filename)
-    file.save(os.path.join(STORAGE_FOLDER, path, filename))
+    file.save(os.path.join(target_folder, path, filename))
     return redirect(url_for("index"))
 
 
@@ -131,7 +141,12 @@ def get_file_content():
         return jsonify({"error": "Unauthorized"}), 401
 
     file_path = request.args.get("path", "")
-    full_path = os.path.join(STORAGE_FOLDER, file_path)
+
+    target_folder = STORAGE_FOLDER
+    if file_path[:8] == "exchange":
+        target_folder = ""  # Cause exchange/ already included in "path"
+
+    full_path = os.path.join(target_folder, file_path)
 
     if not os.path.exists(full_path) or os.path.isdir(full_path):
         return jsonify({"error": "File not found"}), 404
@@ -157,7 +172,14 @@ def download_file(filename):
     if "logged_in" not in session:
         return redirect(url_for("login"))
 
-    full_path = os.path.join(STORAGE_FOLDER, filename)
+    toDelete = False
+    target_folder = STORAGE_FOLDER
+    if filename[:8] == "exchange":
+        filename = filename[9:]
+        target_folder = EXCHANGE_FOLDER
+        toDelete = True
+
+    full_path = os.path.join(target_folder, filename)
 
     if not os.path.exists(full_path):
         return "File not found", 404
@@ -165,7 +187,19 @@ def download_file(filename):
     if os.path.isdir(full_path):
         return "Cannot download a folder", 400
 
-    return send_from_directory(STORAGE_FOLDER, filename, as_attachment=True)
+    response = send_from_directory(target_folder, filename, as_attachment=True)
+
+    if toDelete:
+
+        @after_this_request
+        def remove_file(response):
+            try:
+                os.remove(full_path)
+            except Exception as e:
+                print(f"Error deleting file: {e}")
+            return response
+
+    return response
 
 
 @app.route("/storage_stats")

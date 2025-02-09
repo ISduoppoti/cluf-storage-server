@@ -15,6 +15,7 @@ body {
     border-radius: 10px;
 }
 
+
 .file-viewer-header,
 .header {
     margin-bottom: 20px;
@@ -22,6 +23,26 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+
+.exchange-menu {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #444;
+}
+
+
+.viewer-btns-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.btn-close-viewer {
+    margin-left: 10px;
 }
 
 .viewer-filename,
@@ -100,7 +121,7 @@ body {
     font-weight: bold; /* Optional, if you want to make the last item bold */
 }
 
-
+.header-container,
 .upload-menu {
     display: flex;
     flex-direction: row;
@@ -197,34 +218,81 @@ body {
 
 
 .file-content-container {
-    position: relative;
+    display: grid;
+    grid-template-columns: min-content 1fr;
     font-family: monospace;
+    overflow-x: auto;
 }
 
+
+.file-content.truncated div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.file-content.wrapped div {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+
+.file-content-container.wrapped {
+    overflow-x: hidden;
+}
+
+
+#toggle-wrap {
+    background-color: #6c757d;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+#toggle-wrap:hover {
+    transform: scale(1.1);
+}
+
+#toggle-wrap svg {
+    fill: white;
+}
+
+
 .line-numbers {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
+    position: static;
+    grid-column: 1;
+    min-height: 100%;
+    min-width: 3.5em;
+    height: auto;
     padding-right: 15px;
     color: #6c757d;
     text-align: right;
     user-select: none;
     border-right: 1px solid #444;
     background-color: #272829;
-    z-index: 1;
+    white-space: nowrap;
 }
 
 
 .file-content {
-    position: relative;
-    margin-left: 60px; /* Space for line numbers */
-    min-height: 100px;
+    grid-column: 2;
+    margin-left: 10px !important; /* Remove fixed margin */
+    margin-top: 0;
+    position: static;
+    overflow-x: visible;
 }
 
 
-.file-content div, .line-numbers div {
+.file-content div {
     line-height: 1.5;
+}
+
+.line-numbers div {
+    min-height: 1.5em;
 }
 
 #close-viewer {
@@ -426,4 +494,9 @@ body {
 
 .overlay-btn:active {
     transform: translateY(0);
+}
+
+
+#quick-upload-btn {
+    margin: 15px;    
 }

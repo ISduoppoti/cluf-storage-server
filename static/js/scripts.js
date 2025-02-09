@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const fileContainer = document.getElementById("file-container");
+    const exchangeFileContainer = document.getElementById("exchange-file-container");
     const breadcrumbContainer = document.querySelector(".breadcrumb");
 
     const uploadButton = document.getElementById("upload-button");
@@ -10,8 +11,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const storageCtx = document.getElementById('storageChart').getContext('2d');
     const fileTypesCtx = document.getElementById('fileTypesChart').getContext('2d');
+
+    const quickExchangeBtn = document.getElementById('quick-upload-btn')
+
+    const toggleWrapBtn = document.getElementById('toggle-wrap');
     
     let storageChart, fileTypesChart;
+    let isWrapped = false;
+
+    toggleWrapBtn.addEventListener('click', () => {
+        const contentElement = document.getElementById('file-content');
+        const container = document.querySelector('.file-content-container');
+        
+        isWrapped = !isWrapped;
+        
+        if (isWrapped) {
+            contentElement.classList.remove('truncated');
+            contentElement.classList.add('wrapped');
+            container.classList.add('wrapped');
+            toggleWrapBtn.querySelector('use').setAttribute('xlink:href', '#cross');
+        } else {
+            contentElement.classList.remove('wrapped');
+            contentElement.classList.add('truncated');
+            container.classList.remove('wrapped');
+            toggleWrapBtn.querySelector('use').setAttribute('xlink:href', '#wrap-icon');
+        }
+    });
 
 
     // Fetch and update system info
@@ -124,12 +149,53 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
+    quickExchangeBtn.addEventListener("click", () => {
+        document.getElementById("exchange-file-input").click();
+    });
+
+    document.getElementById("exchange-file-input").addEventListener("change", () => {
+        const formData = new FormData();
+        const fileInput = document.getElementById("exchange-file-input");
+
+        if (fileInput.files.length === 0) {
+            console.error("No file selected");
+            return;
+        }
+
+        formData.append("file", fileInput.files[0]);
+        formData.append("folder", "exchange");
+
+        fetch("/upload", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("File uploaded successfully");
+                fetchFiles("exchange", false);
+            } else {
+                console.error("Error uploading file");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    });
+
+
+
     // Add event listener for the upload button
     uploadButton.addEventListener("click", () => {
         const currentPath = document.getElementById("current-path").value; // Get the current path
         
         const formData = new FormData();
-        const fileInput = document.getElementById("file-input"); // Assuming you have an <input type="file" id="file-input">
+        const fileInput = document.getElementById("file-input");
+
+        if (fileInput.files.length === 0) {
+            console.error("No file selected");
+            return;
+        }
+
         formData.append("file", fileInput.files[0]);
         formData.append("path", currentPath);  // Set the path as needed
 
@@ -168,7 +234,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to render files and folders
     function renderFiles(files, currentPath, dive) {
-        fileContainer.innerHTML = "";
+        
+        let quickExchangeSymbol = "";
+
+        if (currentPath === "exchange") {
+            exchangeFileContainer.innerHTML = "";
+            quickExchangeSymbol = ">> ";
+        } else {
+            fileContainer.innerHTML = "";
+        }
         
         // If inside folder -> render btn back as folder
         if (dive === true && currentPath !== "") {
@@ -200,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 folderButton.addEventListener("click", () => toggleFolder(folderContentDiv, file.path));
             } else {
                 fileDiv.innerHTML = `
-                    <span class="file">📄 ${file.name}</span>
+                    <span class="file">${quickExchangeSymbol}📄 ${file.name}</span>
                     <a href="/download/${file.path}" class="btn-download">
                         <svg class="svg-arr-down" width="15" height="15">
                             <use xlink:href="#arrow-down"></use>
@@ -208,8 +282,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     </a>
                 `;
             }
-
-            fileContainer.appendChild(fileDiv);
+            if (currentPath === "exchange") {
+                exchangeFileContainer.appendChild(fileDiv);
+            } else {
+                fileContainer.appendChild(fileDiv);
+            }
         });
     }
     
@@ -281,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add to existing event listeners
     document.addEventListener("click", (e) => {
         if (e.target.closest(".file-item span:not(.folder)")) {
-            const fileName = e.target.textContent.replace("📄 ", "").trim();
+            const fileName = e.target.textContent.replace("📄 ", "").replace(">>", "").trim();
             const filePath = e.target.closest(".file-item").querySelector("a").href
                 .split("/download/")[1];
             showFileContent(filePath, fileName);
@@ -313,6 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Reset previous state
                 contentElement.removeAttribute('data-type');
+                contentElement.className = 'file-content text-white truncated';
                 viewer.style.display = "block";
                 
                 if (data.type === "image") {
@@ -332,6 +410,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     contentElement.innerHTML = lines.map(line => 
                         `<div>${escapeHtml(line) || '&nbsp;'}</div>`).join('');
 
+                    // Reset wrap state
+                    isWrapped = false;
+                    toggleWrapBtn.querySelector('use').setAttribute('xlink:href', '#wrap-icon');
+                    contentElement.classList.add('truncated');
+                    document.querySelector('.file-content-container').classList.remove('wrapped');
                 }
             });
     }
@@ -419,6 +502,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial load
     fetchFiles();
+    fetchFiles("exchange");
     updateBreadcrumb("");
 
     initCharts();
