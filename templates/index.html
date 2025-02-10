@@ -13,22 +13,13 @@
         </div>
 
         <div class="upload-menu">
-            <!-- Styled File Input -->
-            <label for="file-input" class="file-label">
-                Choose File
-            </label>
-            <input type="file" name="file" id="file-input" class="file-input" />
-            <input type="hidden" name="path" id="current-path" value="" />
-
-            <!-- File Name Display -->
-            <span id="file-name" class="file-name"></span>
-
-            <!-- Styled Upload Button -->
             <button type="submit" id="upload-button" class="upload-button">
                 <svg class="svg-arr-up" width="20" height="20">
                     <use xlink:href="#arrow-up"></use>
                 </svg>
             </button>
+            <input type="file" name="file" id="file-input" class="file-input" />
+            <input type="hidden" name="path" id="current-path" value="" />
 
             <div class="folder-creation-container">
                 <button id="create-folder-button" class="upload-button" type="button">
@@ -116,13 +107,7 @@
             </button>
         </div>
     </div>
-    <div class="file-content-container">
-        <div class="line-numbers"></div>
-        <div class="loading-indicator">
-            Loading content...
-        </div>
-        <pre id="file-content" class="file-content text-white" data-type="text"></pre>
-    </div>
+    <div id="file-content-wrapper"></div>
 </div>
 
 

@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("file-input");
 
     const fileLabel = document.querySelector(".file-label");
-    const fileNameDisplay = document.getElementById("file-name");
 
     const storageCtx = document.getElementById('storageChart').getContext('2d');
     const fileTypesCtx = document.getElementById('fileTypesChart').getContext('2d');
@@ -19,23 +18,57 @@ document.addEventListener("DOMContentLoaded", () => {
     let storageChart, fileTypesChart;
     let isWrapped = false;
 
+
+    // function updateLineNumbers() {
+    //   const contentElement = document.getElementById('file-content');
+    //   const lineNumbersContainer = document.querySelector('.line-numbers');
+    //   
+    //   // Clear previous numbers
+    //   lineNumbersContainer.innerHTML = '';
+    //   
+    //   // For each logical line (each child div in the content)
+    //   Array.from(contentElement.children).forEach((lineDiv, index) => {
+    //     
+    //     //console.log(lineDiv.textContent, ":::", index)
+    //     
+    //     // Create a number element for this logical line
+    //     const lineNumberDiv = document.createElement('div');
+    //
+    //     lineNumberDiv.textContent = index + 1;
+    //     // Set its height to match the content line.
+    //     // (This makes the number’s container as tall as the entire wrapped line, but the number itself will be at the top.)
+    //     const height = Math.ceil(lineDiv.getBoundingClientRect().height);
+    //     lineNumberDiv.style.height = height + 'px';
+    //     console.log(lineDiv.offsetHeight);
+    //     
+    //     // Optional: use flex to ensure the number is aligned to the top.
+    //     lineNumberDiv.style.display = 'flex';
+    //     lineNumberDiv.style.alignItems = 'flex-start';
+    //     lineNumberDiv.style.justifyContent = 'flex-end';  // keep it right-aligned
+    //     
+    //     lineNumbersContainer.appendChild(lineNumberDiv);
+    //   });
+    // }
+
     toggleWrapBtn.addEventListener('click', () => {
-        const contentElement = document.getElementById('file-content');
-        const container = document.querySelector('.file-content-container');
-        
-        isWrapped = !isWrapped;
-        
+      const allLineContent = document.querySelectorAll('.line-content');
+      // Determine new state
+      const newState = isWrapped ? 'truncated' : 'wrapped';
+      
+      allLineContent.forEach(lineContent => {
+        lineContent.classList.remove('truncated', 'wrapped');
+        lineContent.classList.add(newState);
+      });
+      
+      isWrapped = !isWrapped;
+
         if (isWrapped) {
-            contentElement.classList.remove('truncated');
-            contentElement.classList.add('wrapped');
-            container.classList.add('wrapped');
             toggleWrapBtn.querySelector('use').setAttribute('xlink:href', '#cross');
         } else {
-            contentElement.classList.remove('wrapped');
-            contentElement.classList.add('truncated');
-            container.classList.remove('wrapped');
             toggleWrapBtn.querySelector('use').setAttribute('xlink:href', '#wrap-icon');
         }
+      
+      // Optionally change the icon on the toggle button here
     });
 
 
@@ -132,23 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // Listen for file selection
-    fileInput.addEventListener("change", () => {
-        if (fileInput.files.length > 0) {
-            const fileName = fileInput.files[0].name;
-            fileNameDisplay.textContent = fileName;
-
-            // Add active class to slide the button
-            fileNameDisplay.classList.add("active");
-        } else {
-            fileNameDisplay.textContent = "No file chosen";
-
-            // Remove active class to reset
-            fileNameDisplay.classList.remove("active");
-        }
-    });
-
-
     quickExchangeBtn.addEventListener("click", () => {
         document.getElementById("exchange-file-input").click();
     });
@@ -182,10 +198,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-
+    uploadButton.addEventListener("click", () => {
+        document.getElementById("file-input").click();
+    });
 
     // Add event listener for the upload button
-    uploadButton.addEventListener("click", () => {
+    document.getElementById("file-input").addEventListener("change", () => {
         const currentPath = document.getElementById("current-path").value; // Get the current path
         
         const formData = new FormData();
@@ -207,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => {
             if (response.ok) {
                 console.log("File uploaded successfully");
-                fileNameDisplay.classList.remove("active");
                 fetchFiles(currentPath, true);
             } else {
                 console.error("Error uploading file");
@@ -378,43 +395,59 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
                 const viewer = document.getElementById("file-viewer-container");
-                const contentElement = document.getElementById("file-content");
-                const lineNumbers = document.querySelector(".line-numbers");
-                
+                const fileContentWrapper = document.getElementById("file-content-wrapper");
+                // const contentElement = document.getElementById("file-content");
+                // const lineNumbers = document.querySelector(".line-numbers");
+        
                 viewer.style.display = "block";
                 document.getElementById("viewer-filename").textContent = filename;
                 
                 // Clear previous content
-                lineNumbers.innerHTML = '';
-                contentElement.innerHTML = '';
+                fileContentWrapper.innerHTML = '';
+                // lineNumbers.innerHTML = '';
+                // contentElement.innerHTML = '';
 
                 // Reset previous state
-                contentElement.removeAttribute('data-type');
-                contentElement.className = 'file-content text-white truncated';
+                //contentElement.removeAttribute('data-type');
+                //contentElement.className = 'file-content text-white truncated';
                 viewer.style.display = "block";
                 
                 if (data.type === "image") {
-                    contentElement.setAttribute('data-type', 'image');
+                    //contentElement.setAttribute('data-type', 'image');
                     // Create and append image element
                     const img = document.createElement("img");
                     img.src = data.url;
                     img.alt = filename;
                     img.classList.add("preview-image");
-                    contentElement.appendChild(img);
+                    //contentElement.appendChild(img);
                     lineNumbers.style.display = "none";
                 } else if (data.type === "text") {
                     // Handle text content
-                    lineNumbers.style.display = "block";
-                    const lines = data.content.split('\n');
-                    lineNumbers.innerHTML = lines.map((_, i) => `<div>${i + 1}</div>`).join('');
-                    contentElement.innerHTML = lines.map(line => 
-                        `<div>${escapeHtml(line) || '&nbsp;'}</div>`).join('');
+                    //lineNumbers.style.display = "block";
+                    const lines = data.content.split('\n').slice(0, -1);
+                    lines.forEach((lineText, index) => {
+                        const lineDiv = document.createElement('div');
+                        lineDiv.className = 'line';
+                        
+                        const numberDiv = document.createElement('div');
+                        numberDiv.className = 'line-number';
+                        numberDiv.textContent = index + 1;
+                        
+                        const contentDiv = document.createElement('div');
+                        contentDiv.className = 'line-content';
+                        // Use escapeHtml() if needed to avoid injection issues:
+                        contentDiv.innerHTML = escapeHtml(lineText) || '&nbsp;';
+                        
+                        lineDiv.appendChild(numberDiv);
+                        lineDiv.appendChild(contentDiv);
+                        fileContentWrapper.appendChild(lineDiv);
+                     });                   
 
                     // Reset wrap state
                     isWrapped = false;
                     toggleWrapBtn.querySelector('use').setAttribute('xlink:href', '#wrap-icon');
-                    contentElement.classList.add('truncated');
-                    document.querySelector('.file-content-container').classList.remove('wrapped');
+                    //contentElement.classList.add('truncated');
+                    //document.querySelector('.file-content-container').classList.remove('wrapped');
                 }
             });
     }

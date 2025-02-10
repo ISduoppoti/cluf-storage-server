@@ -23,6 +23,7 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 
@@ -136,34 +137,6 @@ body {
     position: absolute;
 }
 
-.file-label {
-    background-color: #D9CDAE;
-    color: #272829;
-    padding: 12px;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: transform 0.2s ease;
-}
-
-.file-label:hover {
-    transform: scale(1.1);
-}
-
-/* File name display */
-.file-name {
-    font-size: 14px;
-    color: #333;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100px;
-    min-width: 100px;
-    opacity: 0; /* Default state: hidden */
-    margin-right: -80px;
-    transition: opacity 0.5s ease-in, margin-right 0.3s ease-in;
-}
 
 /* Upload button styling */
 .upload-button {
@@ -186,14 +159,6 @@ body {
 
 .upload-button svg {
     fill: #272829;
-}
-
-
-.file-name.active {
-    opacity: 1; /* Make it visible */
-    color: #D9CDAE;
-    margin-left: 10px; /* Add spacing from the button */
-    margin-right: 10px;
 }
 
 
@@ -222,6 +187,7 @@ body {
     grid-template-columns: min-content 1fr;
     font-family: monospace;
     overflow-x: auto;
+    position: relative;
 }
 
 
@@ -240,6 +206,49 @@ body {
 
 .file-content-container.wrapped {
     overflow-x: hidden;
+}
+
+
+.line-content.truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Wrapped: allow multiple lines */
+.line-content.wrapped {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+
+#file-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    font-family: monospace;
+}
+
+/* Each logical line as a grid */
+.line {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    align-items: start;
+}
+
+/* The line numbers */
+.line-number {
+    text-align: right;
+    padding-right: 10px;
+    user-select: none;
+    background-color: #272829;
+    color: #6c757d;
+}
+
+/* The content of the line */
+.line-content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -263,18 +272,18 @@ body {
 
 
 .line-numbers {
-    position: static;
+    /* position: static;
     grid-column: 1;
     min-height: 100%;
     min-width: 3.5em;
-    height: auto;
+    height: auto; */
     padding-right: 15px;
     color: #6c757d;
     text-align: right;
     user-select: none;
     border-right: 1px solid #444;
     background-color: #272829;
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 
@@ -373,9 +382,9 @@ body {
 
 .chart-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    gap: 20px; /* Space between charts */
     width: 100%;
     margin: 15px 0;
 }
