@@ -19,37 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let isWrapped = false;
 
 
-    // function updateLineNumbers() {
-    //   const contentElement = document.getElementById('file-content');
-    //   const lineNumbersContainer = document.querySelector('.line-numbers');
-    //   
-    //   // Clear previous numbers
-    //   lineNumbersContainer.innerHTML = '';
-    //   
-    //   // For each logical line (each child div in the content)
-    //   Array.from(contentElement.children).forEach((lineDiv, index) => {
-    //     
-    //     //console.log(lineDiv.textContent, ":::", index)
-    //     
-    //     // Create a number element for this logical line
-    //     const lineNumberDiv = document.createElement('div');
-    //
-    //     lineNumberDiv.textContent = index + 1;
-    //     // Set its height to match the content line.
-    //     // (This makes the number’s container as tall as the entire wrapped line, but the number itself will be at the top.)
-    //     const height = Math.ceil(lineDiv.getBoundingClientRect().height);
-    //     lineNumberDiv.style.height = height + 'px';
-    //     console.log(lineDiv.offsetHeight);
-    //     
-    //     // Optional: use flex to ensure the number is aligned to the top.
-    //     lineNumberDiv.style.display = 'flex';
-    //     lineNumberDiv.style.alignItems = 'flex-start';
-    //     lineNumberDiv.style.justifyContent = 'flex-end';  // keep it right-aligned
-    //     
-    //     lineNumbersContainer.appendChild(lineNumberDiv);
-    //   });
-    // }
-
     toggleWrapBtn.addEventListener('click', () => {
       const allLineContent = document.querySelectorAll('.line-content');
       // Determine new state
@@ -67,8 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             toggleWrapBtn.querySelector('use').setAttribute('xlink:href', '#wrap-icon');
         }
-      
-      // Optionally change the icon on the toggle button here
     });
 
 
@@ -121,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 fileTypesChart.update();
             });
     }
+
 
     // Initialize charts
     function initCharts() {
@@ -201,6 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     uploadButton.addEventListener("click", () => {
         document.getElementById("file-input").click();
     });
+
 
     // Add event listener for the upload button
     document.getElementById("file-input").addEventListener("change", () => {
@@ -307,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
+
     // Function to render btn back as folder
     function renderBtnBack(currentPath) {
         const fileDiv = document.createElement("div");
@@ -329,6 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         fileContainer.appendChild(fileDiv);
     }
+
 
     // Function to toggle folder content visibility
     function toggleFolder(folderContentDiv, path) {
@@ -372,6 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
         currentPathInput.value = currentPath;
     }
 
+
     // Add to existing event listeners
     document.addEventListener("click", (e) => {
         if (e.target.closest(".file-item span:not(.folder)")) {
@@ -385,6 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("close-viewer").addEventListener("click", () => {
         document.getElementById("file-viewer-container").style.display = "none";
     });
+
 
     function showFileContent(path, filename) {
         fetch(`/file_content?path=${encodeURIComponent(path)}`)
@@ -463,14 +436,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-
-
     document.getElementById("create-folder-button").addEventListener("click", toggleFolderOverlay);
     document.getElementById("cancel-folder").addEventListener("click", closeFolderOverlay);
     document.getElementById("confirm-folder").addEventListener("click", createFolder);
     document.addEventListener("click", handleOutsideClick);
 
     let folderOverlayVisible = false;
+
 
     function toggleFolderOverlay(e) {
         e.stopPropagation();
@@ -483,10 +455,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+
     function closeFolderOverlay() {
         folderOverlayVisible = false;
         document.getElementById("folder-overlay").style.display = 'none';
     }
+
 
     function handleOutsideClick(e) {
         const overlay = document.getElementById("folder-overlay");
@@ -498,6 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
             closeFolderOverlay();
         }
     }
+
 
     // Modify the existing createFolder function
     function createFolder() {

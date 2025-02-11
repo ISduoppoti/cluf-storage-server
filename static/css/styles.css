@@ -4,6 +4,9 @@ body {
     font-family: Arial, sans-serif;
 }
 
+
+/* File manager container */
+
 .info-panel,
 .file-viewer-container,
 .file-manager-container {
@@ -27,101 +30,6 @@ body {
 }
 
 
-.exchange-menu {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #444;
-}
-
-
-.viewer-btns-area {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-
-.btn-close-viewer {
-    margin-left: 10px;
-}
-
-.viewer-filename,
-.name-header {
-    color: #D9CDAE;
-}
-
-.file-item {
-    padding: 8px;
-    margin: 5px 0;
-    border: 1px solid #444;
-    border-radius: 5px;
-    background-color: #242525;
-    color: #E5DDC8;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.file-item a, .file-item .download-btn {
-    text-decoration: none;
-    color: #4caf50;
-}
-
-.file-item:hover {
-    background-color: #333;
-    color: #ccc;
-}
-
-.folder-content {
-    margin-top: 10px;
-    padding-left: 20px;
-}
-
-.file,
-.folder {
-    flex: 1;
-    cursor: pointer;
-}
-
-.download-btn {
-    margin-left: 10px;
-}
-
-
-.breadcrumb-container {
-    margin-bottom: 20px;
-}
-
-.breadcrumb {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    background-color: transparent;
-}
-
-.breadcrumb-item {
-    display: inline;
-    font-size: 16px;
-}
-
-.breadcrumb-item,
-.breadcrumb-item span {
-    color: #6c757d; /* Slightly muted color for breadcrumb items */
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-    content: ">";
-    padding: 0 10px;
-}
-
-.breadcrumb-item:last-child,
-.breadcrumb-item:last-child span {
-    color: #D9CDAE; /* Change this color to whatever you prefer */
-    font-weight: bold; /* Optional, if you want to make the last item bold */
-}
-
 .header-container,
 .upload-menu {
     display: flex;
@@ -129,16 +37,21 @@ body {
     align-items: center;
 }
 
-/* File input styling */
-.file-input {
-    opacity: 0;
-    width: 0.1px;
-    height: 0.1px;
-    position: absolute;
+
+.viewer-filename,
+.name-header {
+    color: #D9CDAE;
 }
 
 
-/* Upload button styling */
+#quick-upload-btn {
+    margin: 15px;    
+}
+
+
+/* .upload-menu -> line: 34 */
+
+
 .upload-button {
     display: flex;
     justify-content: center;
@@ -162,263 +75,14 @@ body {
 }
 
 
-.btn-download {
-    width: 25px;
-    height: 25px;
-    border-radius: 4px;
-    background-color: #D9CDAE;
-    display: flex; /* Enables flexbox */
-    align-items: center; /* Centers vertically */
-    justify-content: center; /* Centers horizontally */
-    transition: transform 0.2s ease;
-}
-
-.btn-download:hover {
-    transform: scale(1.1);
-}
-
-.btn-download svg {
-    fill: #272829;
+.file-input {
+    opacity: 0;
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
 }
 
 
-.file-content-container {
-    display: grid;
-    grid-template-columns: min-content 1fr;
-    font-family: monospace;
-    overflow-x: auto;
-    position: relative;
-}
-
-
-.file-content.truncated div {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-
-.file-content.wrapped div {
-    white-space: pre-wrap;
-    word-break: break-word;
-}
-
-
-.file-content-container.wrapped {
-    overflow-x: hidden;
-}
-
-
-.line-content.truncated {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Wrapped: allow multiple lines */
-.line-content.wrapped {
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-
-#file-content-wrapper {
-    display: flex;
-    flex-direction: column;
-    font-family: monospace;
-}
-
-/* Each logical line as a grid */
-.line {
-    display: grid;
-    grid-template-columns: min-content 1fr;
-    align-items: start;
-}
-
-/* The line numbers */
-.line-number {
-    text-align: right;
-    padding-right: 10px;
-    user-select: none;
-    background-color: #272829;
-    color: #6c757d;
-}
-
-/* The content of the line */
-.line-content {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-
-#toggle-wrap {
-    background-color: #6c757d;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease;
-}
-
-#toggle-wrap:hover {
-    transform: scale(1.1);
-}
-
-#toggle-wrap svg {
-    fill: white;
-}
-
-
-.line-numbers {
-    /* position: static;
-    grid-column: 1;
-    min-height: 100%;
-    min-width: 3.5em;
-    height: auto; */
-    padding-right: 15px;
-    color: #6c757d;
-    text-align: right;
-    user-select: none;
-    border-right: 1px solid #444;
-    background-color: #272829;
-    /* white-space: nowrap; */
-}
-
-
-.file-content {
-    grid-column: 2;
-    margin-left: 10px !important; /* Remove fixed margin */
-    margin-top: 0;
-    position: static;
-    overflow-x: visible;
-}
-
-
-.file-content div {
-    line-height: 1.5;
-}
-
-.line-numbers div {
-    min-height: 1.5em;
-}
-
-#close-viewer {
-    width: 40px;
-    height: 40px;
-    padding: 0 8px;
-    background-color: #D9CDAE;
-    border: none;
-    border-radius: 8px;
-    display: flex; /* Enables flexbox */
-    align-items: center; /* Centers vertically */
-    justify-content: center; /* Centers horizontally */
-    transition: transform 0.2s ease;
-}
-
-#close-viewer:hover {
-    transform: scale(1.1);
-}
-
-#close-viewer svg {
-    fill: #272829;
-}
-
-
-
-
-/* Image Preview Styles */
-.preview-image {
-    max-width: 100%;
-    max-height: 70vh;
-    width: auto;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-}
-
-
-/* When showing image - override text styles */
-.file-content[data-type="image"] {
-    margin-left: 0;
-    display: flex;
-    padding: 0;
-    min-height: auto;
-}
-
-.file-content[data-type="text"] {
-    padding: 0;
-}
-
-/* Loading State */
-.loading-indicator {
-    display: none;
-    color: #D9CDAE;
-    padding: 20px;
-    text-align: center;
-}
-
-.loading .loading-indicator {
-    display: block;
-}
-
-.loading .file-content {
-    display: none;
-}
-
-
-/* info panel css */
-.file-manager-content {
-    flex: 1;
-}
-
-.panel-title {
-    color: #D9CDAE;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #444;
-    padding-bottom: 10px;
-}
-
-.chart-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 15px 0;
-}
-
-.chart-container canvas {
-    max-width: 50%; /* Make sure each chart takes up half the space */
-    height: 200px;
-}
-
-.system-stats {
-    margin-top: 20px;
-    padding: 15px;
-    background: #242525;
-    border-radius: 8px;
-}
-
-.stat-item {
-    display: flex;
-    justify-content: space-between;
-    margin: 8px 0;
-    color: #E5DDC8;
-}
-
-.stat-label {
-    font-weight: bold;
-}
-
-.stat-value {
-    color: #4caf50;
-}
-
-
-
-/* Folder creation overlay styles */
 .folder-creation-container {
     position: relative;
     display: inline-block;
@@ -471,8 +135,8 @@ body {
 
 #folder-name-input:focus {
     outline: none; /* Remove the default focus outline */
-    border-color: #888; /* Set your preferred border color */
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2); /* Optional: Add a subtle glow */
+    border-color: #888; 
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
 }
 
 .overlay-buttons {
@@ -506,6 +170,339 @@ body {
 }
 
 
-#quick-upload-btn {
-    margin: 15px;    
+.exchange-menu {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #444;
+}
+
+
+.breadcrumb-container {
+    margin-bottom: 20px;
+}
+
+.breadcrumb {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background-color: transparent;
+}
+
+.breadcrumb-item {
+    display: inline;
+    font-size: 16px;
+}
+
+.breadcrumb-item,
+.breadcrumb-item span {
+    color: #6c757d; /* Slightly muted color for breadcrumb items */
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    padding: 0 10px;
+}
+
+.breadcrumb-item:last-child,
+.breadcrumb-item:last-child span {
+    color: #D9CDAE; 
+    font-weight: bold; /* To make the last item bold */
+}
+
+
+/* Inside #file-container (js related) */
+.file-item {
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #242525;
+    color: #E5DDC8;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-item a, .file-item .download-btn {
+    text-decoration: none;
+    color: #4caf50;
+}
+
+.file-item:hover {
+    background-color: #333;
+    color: #ccc;
+}
+
+.folder-content {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.file,
+.folder {
+    flex: 1;
+    cursor: pointer;
+}
+
+
+.btn-download {
+    width: 25px;
+    height: 25px;
+    border-radius: 4px;
+    background-color: #D9CDAE;
+    display: flex;
+    align-items: center; /* Centers vertically */
+    justify-content: center; /* Centers horizontally */
+    transition: transform 0.2s ease;
+}
+
+.btn-download:hover {
+    transform: scale(1.1);
+}
+
+.btn-download svg {
+    fill: #272829;
+}
+
+
+/* .file-viewer-container -> line: 11 */
+
+/* .file-viewer-header -> line: 22 */
+
+/* .viewer-filename -> line: 41 */
+
+
+.viewer-btns-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#toggle-wrap {
+    background-color: #6c757d;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+#toggle-wrap:hover {
+    transform: scale(1.1);
+}
+
+#toggle-wrap svg {
+    fill: white;
+}
+
+
+.btn-close-viewer {
+    margin-left: 10px;
+}
+
+
+#file-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    font-family: monospace;
+}
+
+
+
+
+
+
+
+
+/* All things with .file content remain due to image but being unresolved */
+.file-content-container {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    font-family: monospace;
+    overflow-x: auto;
+    position: relative;
+}
+
+
+.file-content.truncated div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.file-content.wrapped div {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+
+.file-content-container.wrapped {
+    overflow-x: hidden;
+}
+
+
+.line-content.truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Wrapped: allow multiple lines */
+.line-content.wrapped {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Each logical line as a grid */
+.line {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    align-items: start;
+}
+
+/* The line numbers */
+.line-number {
+    text-align: right;
+    padding-right: 10px;
+    user-select: none;
+    background-color: #272829;
+    color: #6c757d;
+}
+
+/* The content of the line */
+.line-content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-content {
+    grid-column: 2;
+    margin-left: 10px !important; /* Remove fixed margin */
+    margin-top: 0;
+    position: static;
+    overflow-x: visible;
+}
+
+
+.file-content div {
+    line-height: 1.5;
+}
+
+.line-numbers div {
+    min-height: 1.5em;
+}
+
+#close-viewer {
+    width: 40px;
+    height: 40px;
+    padding: 0 8px;
+    background-color: #D9CDAE;
+    border: none;
+    border-radius: 8px;
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Centers vertically */
+    justify-content: center; /* Centers horizontally */
+    transition: transform 0.2s ease;
+}
+
+#close-viewer:hover {
+    transform: scale(1.1);
+}
+
+#close-viewer svg {
+    fill: #272829;
+}
+
+/* Image Preview Styles */
+.preview-image {
+    max-width: 100%;
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+
+/* When showing image - override text styles */
+.file-content[data-type="image"] {
+    margin-left: 0;
+    display: flex;
+    padding: 0;
+    min-height: auto;
+}
+
+.file-content[data-type="text"] {
+    padding: 0;
+}
+
+/* Loading State */
+.loading-indicator {
+    display: none;
+    color: #D9CDAE;
+    padding: 20px;
+    text-align: center;
+}
+
+.loading .loading-indicator {
+    display: block;
+}
+
+.loading .file-content {
+    display: none;
+}
+
+
+
+
+
+
+/* info-panel */
+.panel-title {
+    color: #D9CDAE;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+}
+
+.chart-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 15px 0;
+}
+
+.chart-container canvas {
+    max-width: 50%; /* Make sure each chart takes up half the space */
+    height: 200px;
+}
+
+.system-stats {
+    margin-top: 20px;
+    padding: 15px;
+    background: #242525;
+    border-radius: 8px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    color: #E5DDC8;
+}
+
+.stat-label {
+    font-weight: bold;
+}
+
+.stat-value {
+    color: #4caf50;
 }
