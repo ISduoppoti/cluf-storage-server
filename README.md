@@ -10,31 +10,42 @@
 
 ## About
 
-Cluf is a self-hosting webserver with a purpose of file storage and quick file exchange manipulations. /n
-Cluf storage has two main file windows. Upper one for quick exchange operations, when you upload file from pc and download it from phone, with no need of third-party or wire. /n
-To upload file for quick exchange purpose, press a button right next to `File Manager` header. Important note: After downloading from quick exchange area, file will be deleted.
-For a main storage, you can upload files to it with an upload button or create a folder with create folder button. Important note: You cannot delete files from main storage area in cluf server, only by manually deleting it on a device that runs ur server. This made for avoiding "oops" situations.
+**Cluf** is a **self-hosting web server** with a purpose of file storage and quick file exchange manipulations.  
 
-## Instalation and usage
+### **Features**
+- **Quick Exchange Window:**  
+  - Made for uploading a file from a PC/phone and download it from your phone/PC without need for third party or wire.
+  - To upload file to quick exchange window, press a button right next to **File Manager** header.
+  - ⚠️ **Note:** After downloading, the file is automatically deleted.  
 
-To install cluf on ur server, first, git clone it to a desired folder:
-Note: use dot (.) in the end if you are running a command inside desired folder (folder should be empty)
+- **Main Storage Window:**
+  - Main storage to keep your files. Upload fole to it with upload button and create a folders in it with create folder button.
+  - ⚠️ **Note: Deletion Restriction:** Files cannot be deleted from the main storage via the Cluf web interface. To delete a file, manually remove it from the server's storage directory. Made to avoid "oops" situations.  
+
+
+## Instalation
+
+### **1) Clone the repository**  
+> Note: use dot (.) in the end if you are running a command inside desired folder (folder should be empty)
 ```bash
 git clone https://github.com/ISduoppoti/cluf-storage-server.git .
 ```
 
-After that, build a container with docker or podman (open source, root-less alternative)
-Note: I use podman, but you can simply replace `podman` with `docker` in ur command.
+### **2) Build a container**  
+After cloning, build a container with **docke**r or **podman** (open source, root-less alternative)
+> Note: I use podman, but you can simply replace `podman` with `docker` in ur command.
 ```bash
 podman build -t cluf-storage-server .
 ```
 
+### **3) Run a container**  
 After container is build, run it ->
-Note: Since podman is root-less, can happen that it will not have access to set up its own network inside container, for that I just put `--network=host` which says to podman to not set up its own network inside, but to use host's. If you use docker, I recommend to remove line `--network=host` from command.
+> Note: Since podman is root-less, can happen that it will not have access to set up its own network inside container, for that I just put `--network=host` which says to podman to not set up its own network inside, but to use host's. If you use docker, I recommend to remove line `--network=host` from command.
 ```bash
 podman run -d --restart always --network=host -p 6004:6004 -v ~/cluf-webserver/storage:/storage -v ~/cluf-webserver/exchange:/exchange cluf-storage-server
 ```
+### **4) Access it**  
+After that ur server is set up on port 6004. To access it in browser, just type `your_ip:port` => `192.168.rest-for-you:6004`  
 
-After that ur server is set up on port 6004. To access it in browser, just type `ip:port` = `192.168.rest-for-you:6004`
 
-Enjoy :)
+### **Enjoy :)**
