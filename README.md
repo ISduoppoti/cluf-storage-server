@@ -5,6 +5,6 @@
   <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Container-blue?style=flat-square&logo=docker" alt="Docker"></a>
   <a href="https://podman.io/"><img src="https://img.shields.io/badge/Podman-Container-blueviolet?style=flat-square&logo=podman" alt="podman"></a>
   <a href="https://flask.palletsprojects.com/en/stable/"><img src="https://img.shields.io/badge/Flask-3.1.0-blue?style=flat-square&logo=flask" alt="Flask"></a>
-  <a href=""><img src="https://img.shields.io/github/license/ISduoppoti/cluf-storage-server?style=flat-square" alt="License"></a>
+  <a href=""><img src="https://img.shields.io/github/license/ISduoppoti/cluf-storage-server/LICENCE.txt?style=flat-square" alt="License"></a>
   <a href="https://github.com/ISduoppoti/cluf-storage-server"><img src="https://img.shields.io/badge/Contributions-Welcome-brightgreen?style=flat-square" alt="Contributions Welcome"></a>
 </p>
