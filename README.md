@@ -19,8 +19,15 @@
   - ⚠️ **Note:** After downloading, the file is automatically deleted.  
 
 - **Main Storage Window:**
-  - Main storage to keep your files. Upload fole to it with upload button and create a folders in it with create folder button.
-  - ⚠️ **Note: Deletion Restriction:** Files cannot be deleted from the main storage via the Cluf web interface. To delete a file, manually remove it from the server's storage directory. Made to avoid "oops" situations.  
+  - Main storage to keep your files. Upload file to it with upload button and create a folders in it with create folder button.
+  - ⚠️ **Note: Deletion Restriction:** Files cannot be deleted from the main storage via the Cluf web interface. To delete a file, manually remove it from the server's storage directory. Made to avoid "oops" situations.
+
+- **File content preview:**
+  - Just click on a file to see its content. Also supports images.
+  - If lines in file is too big, press a button to wrap its content.  
+
+- **System Stats:**
+  - Island at the bottom with system stats.  
 
 
 ## Instalation
@@ -49,3 +56,6 @@ After that ur server is set up on port 6004. To access it in browser, just type 
 
 
 ### **Enjoy :)**
+
+### **Server preview**
+<img src="https://github.com/user-attachments/assets/21927db2-b558-46a5-adc4-396d01122685" alt="Cluf-storage: Self-hosting server for ur files">
