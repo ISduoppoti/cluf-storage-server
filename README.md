@@ -10,8 +10,8 @@
 
 ## About
 
-Cluf is a self-hosting webserver with a purpose of file storage and quick file exchange manipulations.
-Cluf storage has two main file windows. Upper one for quick exchange operations, when you upload file from pc and download it from phone, with no need of third-party or wire.
+Cluf is a self-hosting webserver with a purpose of file storage and quick file exchange manipulations. /n
+Cluf storage has two main file windows. Upper one for quick exchange operations, when you upload file from pc and download it from phone, with no need of third-party or wire. /n
 To upload file for quick exchange purpose, press a button right next to `File Manager` header. Important note: After downloading from quick exchange area, file will be deleted.
 For a main storage, you can upload files to it with an upload button or create a folder with create folder button. Important note: You cannot delete files from main storage area in cluf server, only by manually deleting it on a device that runs ur server. This made for avoiding "oops" situations.
 
