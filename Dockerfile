@@ -16,6 +16,7 @@ COPY ./static ./static
 
 # Create uploads folder
 RUN mkdir /storage
+RUN mkdir /exchange
 
 # Expose the port for flusk
 EXPOSE 6004

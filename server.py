@@ -19,8 +19,8 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = "supersecretkey"  # Replace with a secure key in production
 
 # Storage configuration
-STORAGE_FOLDER = "storage"
-EXCHANGE_FOLDER = "exchange"
+STORAGE_FOLDER = "/storage"  # For local run (without docker) remove "/"
+EXCHANGE_FOLDER = "/exchange"  # Same here...
 USERNAME = "admin"  # changed of course... and better to use sha256
 PASSWORD = (
     "password"  # this project now is not for production, for personal self hosting
@@ -28,6 +28,7 @@ PASSWORD = (
 
 # Ensure storage folder exists
 os.makedirs(STORAGE_FOLDER, exist_ok=True)
+os.makedirs(EXCHANGE_FOLDER, exist_ok=True)
 
 
 # Routes
