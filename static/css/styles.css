@@ -305,54 +305,19 @@ body {
 }
 
 
-#file-content-wrapper {
+#file-content-container {
     display: flex;
     flex-direction: column;
     font-family: monospace;
 }
 
-
-
-
-
-
-
-
-/* All things with .file content remain due to image but being unresolved */
-.file-content-container {
-    display: grid;
-    grid-template-columns: min-content 1fr;
-    font-family: monospace;
-    overflow-x: auto;
-    position: relative;
-}
-
-
-.file-content.truncated div {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-
-.file-content.wrapped div {
-    white-space: pre-wrap;
-    word-break: break-word;
-}
-
-
-.file-content-container.wrapped {
-    overflow-x: hidden;
-}
-
-
+/* file contnet viewer stuff (js related) */
 .line-content.truncated {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Wrapped: allow multiple lines */
 .line-content.wrapped {
   white-space: pre-wrap;
   word-break: break-word;
@@ -379,23 +344,6 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.file-content {
-    grid-column: 2;
-    margin-left: 10px !important; /* Remove fixed margin */
-    margin-top: 0;
-    position: static;
-    overflow-x: visible;
-}
-
-
-.file-content div {
-    line-height: 1.5;
-}
-
-.line-numbers div {
-    min-height: 1.5em;
 }
 
 #close-viewer {
@@ -428,39 +376,6 @@ body {
     margin: 0 auto;
     display: block;
 }
-
-
-/* When showing image - override text styles */
-.file-content[data-type="image"] {
-    margin-left: 0;
-    display: flex;
-    padding: 0;
-    min-height: auto;
-}
-
-.file-content[data-type="text"] {
-    padding: 0;
-}
-
-/* Loading State */
-.loading-indicator {
-    display: none;
-    color: #D9CDAE;
-    padding: 20px;
-    text-align: center;
-}
-
-.loading .loading-indicator {
-    display: block;
-}
-
-.loading .file-content {
-    display: none;
-}
-
-
-
-
 
 
 /* info-panel */

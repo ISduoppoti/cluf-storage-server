@@ -368,35 +368,25 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
                 const viewer = document.getElementById("file-viewer-container");
-                const fileContentWrapper = document.getElementById("file-content-wrapper");
-                // const contentElement = document.getElementById("file-content");
-                // const lineNumbers = document.querySelector(".line-numbers");
+                const fileContentContainer = document.getElementById("file-content-container");
         
                 viewer.style.display = "block";
                 document.getElementById("viewer-filename").textContent = filename;
                 
                 // Clear previous content
-                fileContentWrapper.innerHTML = '';
-                // lineNumbers.innerHTML = '';
-                // contentElement.innerHTML = '';
+                fileContentContainer.innerHTML = '';
 
-                // Reset previous state
-                //contentElement.removeAttribute('data-type');
-                //contentElement.className = 'file-content text-white truncated';
                 viewer.style.display = "block";
                 
                 if (data.type === "image") {
-                    //contentElement.setAttribute('data-type', 'image');
                     // Create and append image element
                     const img = document.createElement("img");
                     img.src = data.url;
                     img.alt = filename;
                     img.classList.add("preview-image");
-                    //contentElement.appendChild(img);
-                    lineNumbers.style.display = "none";
+                    fileContentContainer.appendChild(img);
                 } else if (data.type === "text") {
                     // Handle text content
-                    //lineNumbers.style.display = "block";
                     const lines = data.content.split('\n').slice(0, -1);
                     lines.forEach((lineText, index) => {
                         const lineDiv = document.createElement('div');
@@ -408,19 +398,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         
                         const contentDiv = document.createElement('div');
                         contentDiv.className = 'line-content';
-                        // Use escapeHtml() if needed to avoid injection issues:
+                        // escapeHtml() to avoid injection issues:
                         contentDiv.innerHTML = escapeHtml(lineText) || '&nbsp;';
                         
                         lineDiv.appendChild(numberDiv);
                         lineDiv.appendChild(contentDiv);
-                        fileContentWrapper.appendChild(lineDiv);
+                        fileContentContainer.appendChild(lineDiv);
                      });                   
 
                     // Reset wrap state
                     isWrapped = false;
                     toggleWrapBtn.querySelector('use').setAttribute('xlink:href', '#wrap-icon');
-                    //contentElement.classList.add('truncated');
-                    //document.querySelector('.file-content-container').classList.remove('wrapped');
                 }
             });
     }
