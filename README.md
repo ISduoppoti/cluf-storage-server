@@ -57,5 +57,7 @@ After that ur server is set up on port 6004. To access it in browser, just type 
 
 ### **Enjoy :)**
 
+---
+
 ### **Server preview**
 <img src="https://github.com/user-attachments/assets/21927db2-b558-46a5-adc4-396d01122685" alt="Cluf-storage: Self-hosting server for ur files">
