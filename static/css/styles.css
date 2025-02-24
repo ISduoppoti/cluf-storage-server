@@ -49,6 +49,20 @@ body {
 }
 
 
+#folder-upload-button, #zip-upload-button {
+    margin-right: 9px;
+}
+
+.svg-zip {
+    fill: #D9CDAE;
+}
+
+/* Hide original folder icon in zip button */
+#zip-upload-button .svg-folder {
+    display: none;
+}
+
+
 .loading-indicator {
     position: fixed;
     top: 20px;

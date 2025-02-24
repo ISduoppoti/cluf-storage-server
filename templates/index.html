@@ -18,6 +18,19 @@
         </div>
 
         <div class="upload-menu">
+            <button id="folder-upload-button" class="upload-button" type="button" title="Upload Folder">
+                <svg class="svg-folder" width="20" height="20">
+                    <use xlink:href="#folder-upload"></use>
+                </svg>
+            </button>
+            <button id="zip-upload-button" class="upload-button" type="button" title="Upload Folder as ZIP" style="display: none;">
+                <svg class="svg-zip" width="20" height="20">
+                    <use xlink:href="#zip-icon"></use>
+                </svg>
+            </button>
+            <input type="file" id="folder-input" class="file-input" webkitdirectory directory multiple/>
+            <input type="file" id="zip-input" class="file-input" accept=".zip"/>
+
             <button type="submit" id="upload-button" class="upload-button">
                 <svg class="svg-arr-up" width="20" height="20">
                     <use xlink:href="#arrow-up"></use>
@@ -72,6 +85,16 @@
             <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
                 <symbol id="wrap-icon" viewBox="0 0 24 24">
                     <path d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3l3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z"/>
+                </symbol>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="folder-upload" viewBox="0 0 24 24">
+                    <path d="M12.71,10.79a1,1,0,0,0-.33-.21,1,1,0,0,0-.76,0,1,1,0,0,0-.33.21l-2,2a1,1,0,0,0,1.42,1.42l.29-.3V16.5a1,1,0,0,0,2,0V13.91l.29.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42ZM19,5.5H12.72l-.32-1a3,3,0,0,0-2.84-2H5a3,3,0,0,0-3,3v13a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V8.5A3,3,0,0,0,19,5.5Zm1,13a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V5.5a1,1,0,0,1,1-1H9.56a1,1,0,0,1,.95.68l.54,1.64A1,1,0,0,0,12,7.5h7a1,1,0,0,1,1,1Z"/>
+                </symbol>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="svg-zip" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 4h7v5h5v11H6V4zm8 11v-1h-2v2h2v1h-3v2h3v1h-3v2h4v-4h-1z"/>
                 </symbol>
             </svg>
         </div>

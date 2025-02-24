@@ -19,6 +19,117 @@ document.addEventListener("DOMContentLoaded", () => {
     let isWrapped = false;
 
 
+    const supportsDirectoryUpload = ('webkitdirectory' in HTMLInputElement.prototype) || 
+                               ('directory' in HTMLInputElement.prototype);
+
+    // Show appropriate upload method
+    if (supportsDirectoryUpload) {
+        document.getElementById('folder-upload-button').style.display = 'flex';
+    } else {
+        document.getElementById('zip-upload-button').style.display = 'flex';
+    }
+
+    // Zip upload handler
+    document.getElementById("zip-upload-button").addEventListener("click", () => {
+        document.getElementById("zip-input").click();
+    });
+
+    document.getElementById("zip-input").addEventListener("change", function(e) {
+        if (this.files[0]) {
+            uploadZip(this.files[0]);
+        }
+    });
+
+    async function uploadZip(zipFile) {
+        const currentPath = document.getElementById("current-path").value;
+        const formData = new FormData();
+        formData.append("zip", zipFile);
+        formData.append("path", currentPath);
+
+        showDownloadIndicator();
+
+        try {
+            const response = await fetch("/upload_zip", {
+                method: "POST",
+                body: formData
+            });
+            
+            if (response.ok) {
+                fetchFiles(currentPath, true);
+            } else {
+                alert("Zip upload failed");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            hideDownloadIndicator();
+        }
+    }
+
+
+    document.getElementById("folder-upload-button").addEventListener("click", () => {
+        document.getElementById("folder-input").click();
+    });
+    
+    document.getElementById("folder-input").addEventListener("change", function(e) {
+        if (this.files.length > 0) {
+            uploadFolder(this.files);
+        }
+    });
+    
+    // The existing uploadFolder function remains the same
+    function uploadFolder(files) {
+        const currentPath = document.getElementById("current-path").value;
+        const formData = new FormData();
+        formData.append("path", currentPath);
+        
+        showDownloadIndicator();
+    
+        // Create a map of directory paths to ensure proper structure
+        const directoryStructure = new Set();
+    
+        // First pass: Create directory structure
+        for (let file of files) {
+            const relativePath = file.webkitRelativePath || file.name;
+            const pathParts = relativePath.split('/').slice(0, -1);
+            let currentDir = '';
+            
+            for (const part of pathParts) {
+                currentDir = currentDir ? `${currentDir}/${part}` : part;
+                directoryStructure.add(currentDir);
+            }
+
+            formData.append("files[]", file, relativePath);
+        }
+    
+        // Second pass: Add files with their paths
+        for (let file of files) {
+            const relativePath = file.webkitRelativePath || file.name;
+            formData.append("files[]", file, relativePath);
+        }
+    
+        // Add directory structure to form data
+        formData.append("directories", JSON.stringify(Array.from(directoryStructure)));
+    
+        fetch("/upload_folder", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => {
+            hideDownloadIndicator();
+            if (response.ok) {
+                fetchFiles(currentPath, true);
+            } else {
+                console.error("Folder upload failed");
+            }
+        })
+        .catch(error => {
+            hideDownloadIndicator();
+            console.error("Error:", error);
+        });
+    }
+
+
     toggleWrapBtn.addEventListener('click', () => {
       const allLineContent = document.querySelectorAll('.line-content');
       // Determine new state

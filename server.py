@@ -2,6 +2,7 @@ import os
 
 import zipfile
 from io import BytesIO
+import json
 
 import psutil
 from flask import (
@@ -104,6 +105,90 @@ def upload_file():
     filename = secure_filename(file.filename)
     file.save(os.path.join(target_folder, path, filename))
     return redirect(url_for("index"))
+
+
+
+@app.route("/upload_zip", methods=["POST"])
+def upload_zip():
+    if "logged_in" not in session:
+        return redirect(url_for("login"))
+
+    path = request.form.get("path", "")
+    target_folder = os.path.join(STORAGE_FOLDER, path)
+    
+    if "zip" not in request.files:
+        return jsonify({"error": "No ZIP file selected"}), 400
+
+    zip_file = request.files["zip"]
+    if zip_file.filename == "":
+        return jsonify({"error": "Invalid ZIP file"}), 400
+
+    try:
+        with zipfile.ZipFile(zip_file.stream, 'r') as zip_ref:
+            for file_info in zip_ref.infolist():
+                # Prevent zip slip vulnerability
+                final_path = os.path.join(target_folder, file_info.filename)
+                if not final_path.startswith(os.path.realpath(target_folder)):
+                    return jsonify({"error": "Invalid zip file"}), 400
+                
+                if file_info.is_dir():
+                    os.makedirs(final_path, exist_ok=True)
+                else:
+                    os.makedirs(os.path.dirname(final_path), exist_ok=True)
+                    with open(final_path, 'wb') as f:
+                        f.write(zip_ref.read(file_info))
+        
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@app.route("/upload_folder", methods=["POST"])
+def upload_folder():
+    if "logged_in" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        current_path = request.form.get("path", "")
+        target_folder = os.path.join(STORAGE_FOLDER, current_path)
+        
+        # Validate path security
+        if not os.path.realpath(target_folder).startswith(os.path.realpath(STORAGE_FOLDER)):
+            return jsonify({"error": "Invalid path"}), 400
+
+        # Process directories
+        directories = json.loads(request.form.get("directories", "[]"))
+        for directory in directories:
+            # Sanitize each directory component
+            dir_parts = directory.split('/')
+            safe_dir = os.path.join(*[secure_filename(part) for part in dir_parts])
+            dir_path = os.path.join(target_folder, safe_dir)
+            os.makedirs(dir_path, exist_ok=True)
+
+        # Process files
+        uploaded_files = request.files.getlist("files[]")
+        for file in uploaded_files:
+            if file.filename == "":
+                continue
+
+            # Split and sanitize path components
+            path_parts = file.filename.split('/')
+            safe_parts = [secure_filename(p) for p in path_parts]
+            relative_path = os.path.join(*safe_parts)
+            full_path = os.path.join(target_folder, relative_path)
+
+            # Validate final path
+            if not os.path.realpath(full_path).startswith(os.path.realpath(target_folder)):
+                return jsonify({"error": "Invalid file path"}), 400
+
+            # Create parent directories if they don't exist
+            os.makedirs(os.path.dirname(full_path), exist_ok=True)
+            file.save(full_path)
+
+        return jsonify({"success": True}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/create_folder", methods=["POST"])
