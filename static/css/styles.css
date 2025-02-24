@@ -49,6 +49,39 @@ body {
 }
 
 
+.loading-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #272829;
+    color: #D9CDAE;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.loading-indicator.active {
+    display: flex;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #D9CDAE;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
 /* .upload-menu -> line: 34 */
 
 

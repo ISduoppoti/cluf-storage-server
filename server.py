@@ -1,5 +1,8 @@
 import os
 
+import zipfile
+from io import BytesIO
+
 import psutil
 from flask import (
     Flask,
@@ -11,6 +14,7 @@ from flask import (
     send_from_directory,
     session,
     url_for,
+    send_file
 )
 from werkzeug.utils import secure_filename
 
@@ -19,8 +23,8 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = "supersecretkey"  # Replace with a secure key in production
 
 # Storage configuration
-STORAGE_FOLDER = "/storage"  # For local run (without docker) remove "/"
-EXCHANGE_FOLDER = "/exchange"  # Same here...
+STORAGE_FOLDER = "storage"  # For local run (without docker) remove "/"
+EXCHANGE_FOLDER = "exchange"  # Same here...
 USERNAME = "admin"  # changed of course... and better to use sha256
 PASSWORD = (
     "password"  # this project now is not for production, for personal self hosting
@@ -201,6 +205,46 @@ def download_file(filename):
             return response
 
     return response
+
+
+@app.route("/download_folder/<path:folder_path>")
+def download_folder(folder_path):
+    if "logged_in" not in session:
+        return redirect(url_for("login"))
+
+    # Might be not needed --------------------------------------------------
+    if folder_path.startswith("exchange/"):
+        target_folder = EXCHANGE_FOLDER
+        adjusted_path = folder_path[len("exchange/") :]
+    else:
+        target_folder = STORAGE_FOLDER
+        adjusted_path = folder_path
+
+    full_path = os.path.realpath(os.path.join(target_folder, adjusted_path))
+    allowed_path = os.path.realpath(target_folder)
+
+    if not full_path.startswith(allowed_path):
+        return "Invalid path", 400
+
+    if not os.path.isdir(full_path):
+        return "Folder not found", 404
+
+    # Create in-memory zip
+    buffer = BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(full_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, full_path)
+                zipf.write(file_path, arcname)
+
+    buffer.seek(0)
+    return send_file(
+        buffer,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name=f"{os.path.basename(full_path)}.zip"
+    )
 
 
 @app.route("/storage_stats")

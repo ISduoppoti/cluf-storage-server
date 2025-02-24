@@ -133,75 +133,60 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    function showDownloadIndicator() {
+        const indicator = document.getElementById('loading-indicator');
+        indicator.classList.add('active');
+    }
+    
+    function hideDownloadIndicator() {
+        const indicator = document.getElementById('loading-indicator');
+        indicator.classList.remove('active');
+    }
+
+
+    function UploadFiles(toExange=false) {
+        const currentPath = document.getElementById("current-path").value;
+        const formData = new FormData();
+        const fileInput = document.getElementById( toExange ? "exchange-file-input" : "file-input");
+
+        if (fileInput.files.length === 0) {
+            console.error("No file selected");
+            return;
+        }
+
+        formData.append("file", fileInput.files[0]);
+        formData.append( toExange ? "folder" : "path", toExange ? "exchange" : currentPath);
+
+        fetch("/upload", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("File uploaded successfully");
+                fetchFiles(toExange ? "exchange" : currentPath, toExange ? false : true);
+            } else {
+                console.error("Error uploading file");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+
+
     quickExchangeBtn.addEventListener("click", () => {
         document.getElementById("exchange-file-input").click();
     });
 
     document.getElementById("exchange-file-input").addEventListener("change", () => {
-        const formData = new FormData();
-        const fileInput = document.getElementById("exchange-file-input");
-
-        if (fileInput.files.length === 0) {
-            console.error("No file selected");
-            return;
-        }
-
-        formData.append("file", fileInput.files[0]);
-        formData.append("folder", "exchange");
-
-        fetch("/upload", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log("File uploaded successfully");
-                fetchFiles("exchange", false);
-            } else {
-                console.error("Error uploading file");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-        });
-    });
-
-    uploadButton.addEventListener("click", () => {
-        document.getElementById("file-input").click();
+        UploadFiles(true);
     });
 
 
     // Add event listener for the upload button
     document.getElementById("file-input").addEventListener("change", () => {
-        const currentPath = document.getElementById("current-path").value; // Get the current path
-        
-        const formData = new FormData();
-        const fileInput = document.getElementById("file-input");
-
-        if (fileInput.files.length === 0) {
-            console.error("No file selected");
-            return;
-        }
-
-        formData.append("file", fileInput.files[0]);
-        formData.append("path", currentPath);  // Set the path as needed
-
-        // Send the form data via a POST request using fetch
-        fetch("/upload", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log("File uploaded successfully");
-                fetchFiles(currentPath, true);
-            } else {
-                console.error("Error uploading file");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-        });
+        UploadFiles();
     });
 
     
@@ -243,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (file.type === "folder") {
                 fileDiv.innerHTML = `
                     <span class="folder" data-path="${file.path}">📁 ${file.name}</span>
-                    <a href="/download/${file.path}" class="btn-download">
+                    <a href="#" class="btn-download folder-download" data-path="${file.path}">
                         <svg class="svg-arr-down" width="15" height="15">
                             <use xlink:href="#arrow-down"></use>
                         </svg>
@@ -275,7 +260,43 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+
+    document.addEventListener('click', function(e) {
+        const downloadBtn = e.target.closest('.folder-download');
+        if (downloadBtn) {
+            e.preventDefault();
+            const folderPath = encodeURIComponent(downloadBtn.dataset.path);
+            showDownloadIndicator();
     
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `/download_folder/${folderPath}`, true);
+            xhr.responseType = 'blob';
+    
+            xhr.onload = function() {
+                hideDownloadIndicator();
+                if (this.status === 200) {
+                    const blob = this.response;
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${folderPath.split('/').pop()}.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            };
+    
+            xhr.onerror = function() {
+                hideDownloadIndicator();
+                alert('Error downloading folder');
+            };
+    
+            xhr.send();
+        }
+    });
+
 
     // Function to render btn back as folder
     function renderBtnBack(currentPath) {
